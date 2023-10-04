@@ -1,6 +1,7 @@
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:todlrtest/core/helpers.dart';
 import 'package:todlrtest/core/widgets/custom_button.dart';
@@ -16,13 +17,26 @@ class MoneyMissionStartView extends ConsumerStatefulWidget {
 }
 
 class _MoneyMissionStartViewState extends ConsumerState<MoneyMissionStartView> {
-  PageController startMissionPageController = PageController();
-  ValueNotifier<int> startMissionProgressIndex = 0.beamer;
+  ValueNotifier<bool> isPlaying = false.notifier;
+  late AudioPlayer player;
+
+  @override
+  void initState() {
+    super.initState();
+    player = AudioPlayer();
+    isPlaying.value = true;
+    playAudio();
+  }
+
+  void playAudio() async {
+    await player.setAsset('heythere'.audio);
+    await player.setLoopMode(LoopMode.one);
+    player.play();
+  }
 
   @override
   void dispose() {
-    startMissionPageController.dispose();
-    startMissionProgressIndex.dispose();
+    player.dispose();
     super.dispose();
   }
 
@@ -47,39 +61,16 @@ class _MoneyMissionStartViewState extends ConsumerState<MoneyMissionStartView> {
                   borderRadius: BorderRadius.circular(100),
                   border: Border.all(color: Palette.borderPink, width: 10),
                 ),
-                child: PageView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  controller: startMissionPageController,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        'Mission 1'
-                            .txt(
-                              size: 24,
-                              weight: FontWeight.w600,
-                              color: Palette.purple,
-                            )
-                            .fadeInFromTop(),
-                        5.sbH,
-                        'Identify Needs and Wants at the\nGrocery Store'
-                            .txt(size: 20, align: TextAlign.center)
-                            .fadeInFromBottom(),
-                        50.sbH,
-                      ],
-                    ),
-                    Center(
-                      child:
-                          'Hey there, young adventurer,\nIt\'s time for your first mission. Your\nmission is to team up with mum or\ndad to identify and categorise items\naround you that are needs or wants.\nGood Luck!!'
-                              .txt(
-                                size: 19,
-                                align: TextAlign.start,
-                                color: Palette.purple,
-                                height: 1.6,
-                              )
-                              .fadeInFromTop(delay: 400.ms),
-                    ),
-                  ],
+                child: Center(
+                  child:
+                      'Hey there, young adventurer,\nIt\'s time for your first mission. Your\nmission is to team up with mum or\ndad to identify and categorise items\naround you that are needs or wants.\nGood Luck!!'
+                          .txt(
+                            size: 19,
+                            align: TextAlign.start,
+                            color: Palette.purple,
+                            height: 1.6,
+                          )
+                          .fadeInFromTop(delay: 400.ms),
                 ),
               ),
             ),
@@ -88,62 +79,51 @@ class _MoneyMissionStartViewState extends ConsumerState<MoneyMissionStartView> {
             Positioned(
               left: 20,
               bottom: 20,
-              child: CustomButton(
-                onTap: () {},
-                height: 60,
-                width: 60,
-                radius: 20,
-                isText: false,
-                showShadow: true,
-                showBorder: true,
-                color: Palette.btnPink,
-                item: Icon(
-                  PhosphorIcons.fill.speakerSimpleHigh,
-                  color: Palette.neutralWhite,
-                  size: 30,
-                ),
+              child: isPlaying.sync(
+                builder: (context, value, child) => CustomButton(
+                    onTap: () async {
+                      switch (isPlaying.value) {
+                        case true:
+                          player.pause();
+                          isPlaying.value = false;
+                          break;
+
+                        case false:
+                          player.play();
+                          isPlaying.value = true;
+                          break;
+                        default:
+                          () {};
+                      }
+                    },
+                    height: 60,
+                    width: 60,
+                    radius: 20,
+                    isText: false,
+                    showShadow: true,
+                    showBorder: true,
+                    color: Palette.btnPink,
+                    item: Icon(
+                      isPlaying.value
+                          ? PhosphorIcons.fill.speakerSimpleHigh
+                          : PhosphorIcons.fill.speakerSimpleX,
+                      color: Palette.neutralWhite,
+                      size: 30,
+                    )),
               ),
             ),
 
-            //! start mission
+            //! go button
             Positioned(
               right: 45,
               bottom: 45,
-              child: startMissionProgressIndex.sync(
-                builder: (context, value, child) => CustomButton(
-                  onTap: () {
-                    if (startMissionProgressIndex.value == 0) {
-                      startMissionPageController
-                          .animateToPage(
-                        1,
-                        duration: 300.ms,
-                        curve: Curves.easeIn,
-                      )
-                          .whenComplete(() {
-                        startMissionProgressIndex.value = 1;
-                      });
-                    } else {
-                      goToWithRizz(context, const MoneyMissionTipsView());
-                    }
-                  },
-                  width: 170,
-                  isText: false,
-                  text: 'Start Mission',
-                  item: switch (startMissionProgressIndex.value) {
-                    0 => 'Start Mission'.txt(
-                        size: 16,
-                        weight: FontWeight.w600,
-                        color: Palette.neutralWhite,
-                      ),
-                    _ => 'Go!'
-                        .txt(
-                          size: 16,
-                          weight: FontWeight.w600,
-                          color: Palette.neutralWhite,
-                        )
-                        .fadeInFromBottom(delay: 0.ms),
-                  },
-                ),
+              child: CustomButton(
+                onTap: () async {
+                  player.pause();
+                  fadeTo(context, const MoneyMissionTipsView());
+                },
+                width: 170,
+                text: 'Go',
               ),
             ),
           ],

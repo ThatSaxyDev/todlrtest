@@ -21,6 +21,7 @@ dependencies:
   flutter_svg: ^2.0.7
   phosphor_flutter: ^2.0.0
   auto_size_text: ^3.0.0
+  just_audio: ^0.9.35
 
 dev_dependencies:
   flutter_test:
@@ -35,3 +36,4 @@ flutter:
   assets:
     - lib/assets/vectors/
     - lib/assets/images/
+    - lib/assets/audios/

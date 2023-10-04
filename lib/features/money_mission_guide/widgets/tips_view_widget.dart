@@ -102,7 +102,8 @@ class TipsViewWidget extends StatelessWidget {
                           height: 170,
                           width: 430,
                           margin: const EdgeInsets.only(bottom: 20, left: 10),
-                          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 20),
                           decoration: BoxDecoration(
                             color: Palette.beige,
                             borderRadius: BorderRadius.circular(25),
@@ -152,7 +153,9 @@ class TipsViewWidget extends StatelessWidget {
                   ),
                 ],
               ),
-            ).moveInFromTop(delay: 500.ms),
+            ).moveInFromTop(
+                delay: index == 0 ? 300.ms : 220.ms,
+                offset: const Offset(20, -20)),
           )
         ],
       ),

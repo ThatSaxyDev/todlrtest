@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:todlrtest/core/helpers.dart';
 import 'package:todlrtest/core/widgets/custom_button.dart';
@@ -20,11 +21,27 @@ class MoneyMissionTipsView extends ConsumerStatefulWidget {
 
 class _MoneyMissionTipsViewState extends ConsumerState<MoneyMissionTipsView> {
   PageController tipsPageController = PageController();
+  ValueNotifier<int> pageIndex = 0.notifier;
+  ValueNotifier<bool> isPlaying = false.notifier;
+  late AudioPlayer player;
 
-  ValueNotifier<int> pageIndex = 0.beamer;
+  @override
+  void initState() {
+    super.initState();
+    player = AudioPlayer();
+    isPlaying.value = true;
+    playAudio();
+  }
+
+  void playAudio() async {
+    await player.setAsset('tips'.audio);
+    await player.setLoopMode(LoopMode.one);
+    player.play();
+  }
 
   @override
   void dispose() {
+    player.dispose();
     pageIndex.dispose();
     tipsPageController.dispose();
     super.dispose();
@@ -83,40 +100,73 @@ class _MoneyMissionTipsViewState extends ConsumerState<MoneyMissionTipsView> {
                 Positioned(
                   left: 20,
                   bottom: 20,
-                  child: CustomButton(
-                    onTap: () {},
-                    height: 60,
-                    width: 60,
-                    radius: 20,
-                    isText: false,
-                    showShadow: true,
-                    showBorder: true,
-                    color: Palette.btnPink,
-                    item: Icon(
-                      PhosphorIcons.fill.speakerSimpleHigh,
-                      color: Palette.neutralWhite,
-                      size: 30,
-                    ),
+                  child: isPlaying.sync(
+                    builder: (context, value, child) => CustomButton(
+                        onTap: () async {
+                          switch (isPlaying.value) {
+                            case true:
+                              player.pause();
+                              isPlaying.value = false;
+                              break;
+
+                            case false:
+                              player.play();
+                              isPlaying.value = true;
+                              break;
+                            default:
+                              () {};
+                          }
+                        },
+                        height: 60,
+                        width: 60,
+                        radius: 20,
+                        isText: false,
+                        showShadow: true,
+                        showBorder: true,
+                        color: Palette.btnPink,
+                        item: Icon(
+                          isPlaying.value
+                              ? PhosphorIcons.fill.speakerSimpleHigh
+                              : PhosphorIcons.fill.speakerSimpleX,
+                          color: Palette.neutralWhite,
+                          size: 30,
+                        )),
                   ),
                 ),
 
                 //! next
-                //! start mission
                 Positioned(
                   right: 22,
                   bottom: 26,
                   child: pageIndex.sync(
                     builder: (context, value, child) => CustomButton(
-                      onTap: () {
+                      onTap: () async {
                         if (pageIndex.value != tips.length - 1) {
                           pageIndex.value++;
                           tipsPageController.animateToPage(
                             pageIndex.value,
-                            duration: 300.ms,
-                            curve: Curves.easeIn,
+                            duration: 500.ms,
+                            curve: Curves.linearToEaseOut,
                           );
+                          switch (pageIndex.value) {
+                            case 1:
+                              await player.seek(9.seconds);
+                              break;
+                            case 2:
+                              await player.seek(25500.ms);
+                              break;
+                            default:
+                              () {};
+                          }
                         } else {
-                          goToWithRizz(context, const MoneyMissionEndView());
+                          pageIndex.value++;
+                          tipsPageController.animateToPage(
+                            pageIndex.value,
+                            duration: 500.ms,
+                            curve: Curves.linearToEaseOut,
+                          );
+                          player.pause();
+                          fadeTo(context, const MoneyMissionEndView());
                         }
                       },
                       width: 180,

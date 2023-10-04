@@ -11,8 +11,12 @@ extension IconPath on String {
   String get svg => 'lib/assets/vectors/$this.svg';
 }
 
+extension AudioPath on String {
+  String get audio => 'lib/assets/audios/$this.m4a';
+}
+
 extension ValueNotifierExtension<T> on T {
-  ValueNotifier<T> get beamer => ValueNotifier<T>(this);
+  ValueNotifier<T> get notifier => ValueNotifier<T>(this);
 }
 
 //! extension for listening to ValueNotifier instances.
@@ -49,12 +53,12 @@ double width(BuildContext context) {
 }
 
 //! fade page transition
-goToWithRizz(BuildContext context, Widget view) {
+fadeTo(BuildContext context, Widget view) {
   Navigator.of(context).push(PageRouteBuilder(
       pageBuilder: (context, animation, anotherAnimation) {
         return view;
       },
-      transitionDuration: const Duration(milliseconds: 2000),
+      transitionDuration: const Duration(milliseconds: 1000),
       transitionsBuilder: (context, animation, anotherAnimation, child) {
         animation = CurvedAnimation(
           curve: Curves.linearToEaseOut,

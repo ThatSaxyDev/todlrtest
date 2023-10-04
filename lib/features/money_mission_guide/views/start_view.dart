@@ -1,22 +1,20 @@
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:todlrtest/core/helpers.dart';
 import 'package:todlrtest/core/widgets/custom_button.dart';
-import 'package:todlrtest/features/money_mission_guide/views/start_view.dart';
+import 'package:todlrtest/features/money_mission_guide/views/money_mission_start_view.dart';
 import 'package:todlrtest/theme/palette.dart';
 
-class MoneyMissionEndView extends ConsumerStatefulWidget {
-  const MoneyMissionEndView({super.key});
+class StartView extends ConsumerStatefulWidget {
+  const StartView({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _MoneyMissionEndViewState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _StartViewState();
 }
 
-class _MoneyMissionEndViewState extends ConsumerState<MoneyMissionEndView> {
+class _StartViewState extends ConsumerState<StartView> {
   ValueNotifier<bool> isPlaying = false.notifier;
   late AudioPlayer player;
 
@@ -29,7 +27,7 @@ class _MoneyMissionEndViewState extends ConsumerState<MoneyMissionEndView> {
   }
 
   void playAudio() async {
-    await player.setAsset('welldone'.audio);
+    await player.setAsset('mission1'.audio);
     await player.setLoopMode(LoopMode.one);
     player.play();
   }
@@ -61,16 +59,22 @@ class _MoneyMissionEndViewState extends ConsumerState<MoneyMissionEndView> {
                   borderRadius: BorderRadius.circular(100),
                   border: Border.all(color: Palette.borderPink, width: 10),
                 ),
-                child: Center(
-                  child: 'Well Done!'
-                      .txt(
-                        size: 30,
-                        weight: FontWeight.w600,
-                        align: TextAlign.start,
-                        color: Palette.purple,
-                        height: 1.6,
-                      )
-                      .fadeInFromTop(delay: 400.ms),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    'Mission 1'
+                        .txt(
+                          size: 24,
+                          weight: FontWeight.w600,
+                          color: Palette.purple,
+                        )
+                        .fadeInFromTop(),
+                    5.sbH,
+                    'Identify Needs and Wants at the\nGrocery Store'
+                        .txt(size: 20, align: TextAlign.center)
+                        .fadeInFromBottom(),
+                    50.sbH,
+                  ],
                 ),
               ),
             ),
@@ -120,10 +124,10 @@ class _MoneyMissionEndViewState extends ConsumerState<MoneyMissionEndView> {
               child: CustomButton(
                 onTap: () {
                   player.pause();
-                  fadeTo(context, const StartView());
+                  fadeTo(context, const MoneyMissionStartView());
                 },
                 width: 170,
-                text: 'Restart',
+                text: 'Start Mission',
               ).fadeInFromBottom(),
             ),
           ],

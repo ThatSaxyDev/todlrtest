@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:todlrtest/features/money_mission_guide/views/money_mission_start_view.dart';
+import 'package:todlrtest/features/money_mission_guide/views/start_view.dart';
 import 'package:todlrtest/firebase_options.dart';
 
 void main() async {
@@ -32,7 +32,7 @@ class ToldrTestApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MoneyMissionStartView(),
+      home: const StartView(),
     );
   }
 }

@@ -11,3 +11,6 @@ typedef FutureEither<SuccessType> = Future<Either<Failure, SuccessType>>;
 /* simple future of type void returning a custom future either of type void, 
 i.e., regular future that returns nothing. */
 typedef FutureVoid = FutureEither<void>;
+
+//! an enum for handling the audio state
+enum AudioState { playing, paused, done }
