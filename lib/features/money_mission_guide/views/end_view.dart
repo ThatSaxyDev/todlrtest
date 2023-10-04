@@ -5,6 +5,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:todlrtest/core/helpers.dart';
 import 'package:todlrtest/core/widgets/custom_button.dart';
+import 'package:todlrtest/features/money_mission_guide/providers/money_mission_guide_providers.dart';
 import 'package:todlrtest/features/money_mission_guide/views/start_view.dart';
 import 'package:todlrtest/theme/palette.dart';
 
@@ -29,8 +30,8 @@ class _MoneyMissionEndViewState extends ConsumerState<MoneyMissionEndView> {
   }
 
   void playAudio() async {
-    await player.setAsset('welldone'.audio);
-    await player.setLoopMode(LoopMode.one);
+    await player.setAsset('well'.audio);
+
     player.play();
   }
 
@@ -42,6 +43,7 @@ class _MoneyMissionEndViewState extends ConsumerState<MoneyMissionEndView> {
 
   @override
   Widget build(BuildContext context) {
+    int points = ref.watch(pointsControllerProvider);
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -72,6 +74,22 @@ class _MoneyMissionEndViewState extends ConsumerState<MoneyMissionEndView> {
                       )
                       .fadeInFromTop(delay: 400.ms),
                 ),
+              ),
+            ),
+
+            //! lightning
+            Positioned(
+              right: 40,
+              top: 40,
+              child: Row(
+                children: [
+                  Icon(
+                    PhosphorIcons.fill.lightning,
+                    size: 30,
+                    color: Palette.liteYellow,
+                  ),
+                  points.toString().txt(size: 22, color: Palette.neutralWhite),
+                ],
               ),
             ),
 
@@ -120,6 +138,7 @@ class _MoneyMissionEndViewState extends ConsumerState<MoneyMissionEndView> {
               child: CustomButton(
                 onTap: () {
                   player.pause();
+                  ref.read(pointsControllerProvider.notifier).resetPoints();
                   fadeTo(context, const StartView());
                 },
                 width: 170,

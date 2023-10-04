@@ -35,7 +35,6 @@ class _MoneyMissionTipsViewState extends ConsumerState<MoneyMissionTipsView> {
 
   void playAudio() async {
     await player.setAsset('tips'.audio);
-    await player.setLoopMode(LoopMode.one);
     player.play();
   }
 
@@ -50,6 +49,7 @@ class _MoneyMissionTipsViewState extends ConsumerState<MoneyMissionTipsView> {
   @override
   Widget build(BuildContext context) {
     AsyncValue<List<TipsModel>> asyncTips = ref.watch(getTipsProvider);
+    int points = ref.watch(pointsControllerProvider);
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -82,6 +82,7 @@ class _MoneyMissionTipsViewState extends ConsumerState<MoneyMissionTipsView> {
                   top: 40,
                   child: CustomButton(
                     onTap: () {
+                      player.stop();
                       Navigator.of(context).pop();
                     },
                     height: 30,
@@ -93,6 +94,24 @@ class _MoneyMissionTipsViewState extends ConsumerState<MoneyMissionTipsView> {
                       color: Palette.neutralWhite,
                       size: 23,
                     ),
+                  ),
+                ),
+
+                //! lightning
+                Positioned(
+                  right: 40,
+                  top: 40,
+                  child: Row(
+                    children: [
+                      Icon(
+                        PhosphorIcons.fill.lightning,
+                        size: 30,
+                        color: Palette.liteYellow,
+                      ),
+                      points
+                          .toString()
+                          .txt(size: 22, color: Palette.neutralWhite),
+                    ],
                   ),
                 ),
 
@@ -142,6 +161,9 @@ class _MoneyMissionTipsViewState extends ConsumerState<MoneyMissionTipsView> {
                     builder: (context, value, child) => CustomButton(
                       onTap: () async {
                         if (pageIndex.value != tips.length - 1) {
+                          ref
+                              .read(pointsControllerProvider.notifier)
+                              .addToPoints();
                           pageIndex.value++;
                           tipsPageController.animateToPage(
                             pageIndex.value,
@@ -165,7 +187,7 @@ class _MoneyMissionTipsViewState extends ConsumerState<MoneyMissionTipsView> {
                             duration: 500.ms,
                             curve: Curves.linearToEaseOut,
                           );
-                          player.pause();
+                          player.stop();
                           fadeTo(context, const MoneyMissionEndView());
                         }
                       },

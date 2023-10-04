@@ -5,6 +5,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:todlrtest/core/helpers.dart';
 import 'package:todlrtest/core/widgets/custom_button.dart';
+import 'package:todlrtest/features/money_mission_guide/providers/money_mission_guide_providers.dart';
 import 'package:todlrtest/features/money_mission_guide/views/money_mission_tips_view.dart';
 import 'package:todlrtest/theme/palette.dart';
 
@@ -42,6 +43,7 @@ class _MoneyMissionStartViewState extends ConsumerState<MoneyMissionStartView> {
 
   @override
   Widget build(BuildContext context) {
+    int points = ref.watch(pointsControllerProvider);
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -72,6 +74,22 @@ class _MoneyMissionStartViewState extends ConsumerState<MoneyMissionStartView> {
                           )
                           .fadeInFromTop(delay: 400.ms),
                 ),
+              ),
+            ),
+
+            //! lightning
+            Positioned(
+              right: 40,
+              top: 40,
+              child: Row(
+                children: [
+                  Icon(
+                    PhosphorIcons.fill.lightning,
+                    size: 30,
+                    color: Palette.liteYellow,
+                  ),
+                  points.toString().txt(size: 22, color: Palette.neutralWhite),
+                ],
               ),
             ),
 
@@ -119,6 +137,7 @@ class _MoneyMissionStartViewState extends ConsumerState<MoneyMissionStartView> {
               bottom: 45,
               child: CustomButton(
                 onTap: () async {
+                  ref.read(pointsControllerProvider.notifier).addToPoints();
                   player.pause();
                   fadeTo(context, const MoneyMissionTipsView());
                 },
