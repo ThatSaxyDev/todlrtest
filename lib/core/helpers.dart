@@ -67,6 +67,12 @@ goToWithRizz(BuildContext context, Widget view) {
       }));
 }
 
+goTo(BuildContext context, Widget view) {
+  Navigator.of(context).push(MaterialPageRoute(
+    builder: (context) => view,
+  ));
+}
+
 //! text extension
 extension StyledTextExtension on String {
   Text txt({

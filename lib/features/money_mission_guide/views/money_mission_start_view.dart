@@ -20,6 +20,13 @@ class _MoneyMissionStartViewState extends ConsumerState<MoneyMissionStartView> {
   ValueNotifier<int> startMissionProgressIndex = 0.beamer;
 
   @override
+  void dispose() {
+    startMissionPageController.dispose();
+    startMissionProgressIndex.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(

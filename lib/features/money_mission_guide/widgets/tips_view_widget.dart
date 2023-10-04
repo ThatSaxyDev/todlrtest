@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -101,11 +102,22 @@ class TipsViewWidget extends StatelessWidget {
                           height: 170,
                           width: 430,
                           margin: const EdgeInsets.only(bottom: 20, left: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
                           decoration: BoxDecoration(
                             color: Palette.beige,
                             borderRadius: BorderRadius.circular(25),
                             border: Border.all(
                                 color: Palette.neutralWhite, width: 3),
+                          ),
+                          child: Center(
+                            child: AutoSizeText(
+                              tips.point!,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: Palette.neutralWhite,
+                              ),
+                            ),
                           ),
                         ),
                       ),
