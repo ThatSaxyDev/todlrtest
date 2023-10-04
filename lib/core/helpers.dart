@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import "package:flutter_animate/flutter_animate.dart";
 
@@ -117,35 +118,57 @@ extension WidgetExtensions on num {
 extension WidgetAnimation on Widget {
   Animate fadeInFromTop({
     Duration? delay,
-    Duration? animatiomDuration,
+    Duration? animationDuration,
     Offset? offset,
   }) =>
       animate(delay: delay ?? 500.ms)
           .move(
-            duration: animatiomDuration ?? 500.ms,
-            begin: offset ?? const Offset(0, -1),
+            duration: animationDuration ?? 500.ms,
+            begin: offset ?? const Offset(0, -10),
+            curve: Curves.linearToEaseOut,
           )
-          .fade(duration: animatiomDuration ?? 500.ms);
+          .fade(duration: animationDuration ?? 500.ms);
+
+  Animate moveInFromTop({
+    Duration? delay,
+    Duration? animationDuration,
+    Offset? offset,
+  }) =>
+      animate(delay: delay ?? 500.ms).move(
+        duration: animationDuration ?? 500.ms,
+        begin: offset ?? const Offset(0, -20),
+        curve: Curves.linearToEaseOut,
+      );
 
   Animate fadeInFromBottom({
     Duration? delay,
-    Duration? animatiomDuration,
+    Duration? animationDuration,
     Offset? offset,
   }) =>
       animate(delay: delay ?? 500.ms)
           .move(
-            duration: animatiomDuration ?? 500.ms,
+            duration: animationDuration ?? 500.ms,
             begin: offset ?? const Offset(0, 10),
+            curve: Curves.linearToEaseOut,
           )
-          .fade(duration: animatiomDuration ?? 500.ms);
+          .fade(duration: animationDuration ?? 500.ms);
 
   Animate fadeIn({
     Duration? delay,
-    Duration? animatiomDuration,
+    Duration? animationDuration,
     Curve? curve,
   }) =>
       animate(delay: delay ?? 500.ms).fade(
-        duration: animatiomDuration ?? 500.ms,
+        duration: animationDuration ?? 500.ms,
         curve: curve ?? Curves.decelerate,
       );
+}
+
+//! LOG EXTENSION - THIS HELPS TO CALL PRINT SAFELY ON ANY OBJECT
+extension Log on Object {
+  void log() {
+    if (kDebugMode) {
+      print(toString());
+    }
+  }
 }

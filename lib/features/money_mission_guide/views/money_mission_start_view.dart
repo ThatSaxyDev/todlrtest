@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:todlrtest/core/helpers.dart';
 import 'package:todlrtest/core/widgets/custom_button.dart';
-import 'package:todlrtest/core/widgets/switcher.dart';
-import 'package:todlrtest/features/money_mission_guide/providers/money_mission_guide_providers.dart';
-import 'package:todlrtest/models/tips_model.dart';
+import 'package:todlrtest/features/money_mission_guide/views/money_mission_tips_view.dart';
 import 'package:todlrtest/theme/palette.dart';
 
 class MoneyMissionStartView extends ConsumerStatefulWidget {
@@ -23,29 +21,7 @@ class _MoneyMissionStartViewState extends ConsumerState<MoneyMissionStartView> {
 
   @override
   Widget build(BuildContext context) {
-    AsyncValue<List<TipsModel>> asyncTips = ref.watch(getTipsProvider);
     return Scaffold(
-      // body: asyncTips.when(
-      //   data: (List<TipsModel> tips) {
-      //     print(tips[0].title);
-      //     return Center();
-      //   },
-      //   error: (error, stackTrace) {
-      //     print(error.toString());
-      //     return const Column(
-      //       children: [
-      //         Text('An error occured'),
-      //       ],
-      //     );
-      //   },
-      //   loading: () => const Center(
-      //     child: SizedBox(
-      //       height: 50,
-      //       width: 50,
-      //       child: CircularProgressIndicator.adaptive(),
-      //     ),
-      //   ),
-      // ),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -94,7 +70,7 @@ class _MoneyMissionStartViewState extends ConsumerState<MoneyMissionStartView> {
                                 color: Palette.purple,
                                 height: 1.6,
                               )
-                              .fadeInFromBottom(delay: 400.ms),
+                              .fadeInFromTop(delay: 400.ms),
                     ),
                   ],
                 ),
@@ -129,15 +105,19 @@ class _MoneyMissionStartViewState extends ConsumerState<MoneyMissionStartView> {
               child: startMissionProgressIndex.sync(
                 builder: (context, value, child) => CustomButton(
                   onTap: () {
-                    startMissionPageController
-                        .animateToPage(
-                      1,
-                      duration: 300.ms,
-                      curve: Curves.easeIn,
-                    )
-                        .whenComplete(() {
-                      startMissionProgressIndex.value = 1;
-                    });
+                    if (startMissionProgressIndex.value == 0) {
+                      startMissionPageController
+                          .animateToPage(
+                        1,
+                        duration: 300.ms,
+                        curve: Curves.easeIn,
+                      )
+                          .whenComplete(() {
+                        startMissionProgressIndex.value = 1;
+                      });
+                    } else {
+                      goToWithRizz(context, const MoneyMissionTipsView());
+                    }
                   },
                   width: 170,
                   isText: false,
@@ -148,11 +128,13 @@ class _MoneyMissionStartViewState extends ConsumerState<MoneyMissionStartView> {
                         weight: FontWeight.w600,
                         color: Palette.neutralWhite,
                       ),
-                    _ => 'Go!'.txt(
-                        size: 16,
-                        weight: FontWeight.w600,
-                        color: Palette.neutralWhite,
-                      ).fadeInFromBottom(delay: 0.ms),
+                    _ => 'Go!'
+                        .txt(
+                          size: 16,
+                          weight: FontWeight.w600,
+                          color: Palette.neutralWhite,
+                        )
+                        .fadeInFromBottom(delay: 0.ms),
                   },
                 ),
               ),
