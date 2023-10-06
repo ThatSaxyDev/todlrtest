@@ -13,6 +13,7 @@ extension IconPath on String {
 
 extension AudioPath on String {
   String get audio => 'lib/assets/audios/$this.m4a';
+  String get wavaudio => 'lib/assets/audios/$this.wav';
 }
 
 extension ValueNotifierExtension<T> on T {

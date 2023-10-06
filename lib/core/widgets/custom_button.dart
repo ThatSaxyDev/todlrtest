@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:todlrtest/core/helpers.dart';
 
 import 'package:todlrtest/theme/palette.dart';
 
@@ -40,10 +42,13 @@ class CustomButton extends StatefulWidget {
 
 class _CustomButtonState extends State<CustomButton>
     with SingleTickerProviderStateMixin {
+  late AudioPlayer player;
   late double _scale;
   late AnimationController _controller;
   @override
   void initState() {
+    super.initState();
+    player = AudioPlayer();
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(
@@ -54,16 +59,23 @@ class _CustomButtonState extends State<CustomButton>
     )..addListener(() {
         setState(() {});
       });
-    super.initState();
+  }
+
+  void playAudio() async {
+    await player.setAsset('clickk'.wavaudio);
+    // await player.setLoopMode(LoopMode.one);
+    player.play();
   }
 
   @override
   void dispose() {
-    super.dispose();
+    player.dispose();
     _controller.dispose();
+    super.dispose();
   }
 
   void _tapDown(TapDownDetails details) {
+    playAudio();
     _controller.forward();
   }
 
@@ -90,8 +102,9 @@ class _CustomButtonState extends State<CustomButton>
             ),
             border: Border.all(
               width: 0.5,
-              color:
-                  widget.showBorder ? Palette.neutralBlack.withOpacity(0.5) : Colors.transparent,
+              color: widget.showBorder
+                  ? Palette.neutralBlack.withOpacity(0.5)
+                  : Colors.transparent,
             ),
             boxShadow: widget.showShadow
                 ? [
